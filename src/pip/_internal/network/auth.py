@@ -111,6 +111,7 @@ class MultiDomainBasicAuth(AuthBase):
         original_url: str,
         allow_netrc: bool = True,
         allow_keyring: bool = False,
+        allow_url: bool = True,
     ) -> AuthInfo:
         """Find and return credentials for the specified URL."""
         # Split the credentials and netloc from the url.
@@ -134,7 +135,7 @@ class MultiDomainBasicAuth(AuthBase):
                 logger.debug("Found index url %s", index_url)
 
         # If an index URL was found, try its embedded credentials
-        if index_url and index_url_user_password[0] is not None:
+        if allow_url and index_url and index_url_user_password[0] is not None:
             username, password = index_url_user_password
             if username is not None and password is not None:
                 logger.debug("Found credentials in index url for %s", netloc)
@@ -262,6 +263,7 @@ class MultiDomainBasicAuth(AuthBase):
             resp.url,
             allow_netrc=False,
             allow_keyring=True,
+            allow_url=False,
         )
 
         # Prompt the user for a new username and password
